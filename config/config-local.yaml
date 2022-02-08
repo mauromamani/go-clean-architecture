@@ -1,0 +1,5 @@
+server:
+  Port: :5000
+
+sqlite:
+  FileName: sqlite.db
