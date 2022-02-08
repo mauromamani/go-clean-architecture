@@ -2,10 +2,12 @@ package usecase
 
 import "github.com/mauromamani/go-clean-architecture/internal/user"
 
-type userUseCase struct{}
+type userUseCase struct {
+	userRepository user.Repository
+}
 
-func NewUserUseCase() user.UseCase {
-	return &userUseCase{}
+func NewUserUseCase(userRepo user.Repository) user.UseCase {
+	return &userUseCase{userRepository: userRepo}
 }
 
 // Get

@@ -2,6 +2,7 @@ package server
 
 import (
 	userHttp "github.com/mauromamani/go-clean-architecture/internal/user/delivery/http"
+	userRepo "github.com/mauromamani/go-clean-architecture/internal/user/repository"
 	userUC "github.com/mauromamani/go-clean-architecture/internal/user/usecase"
 )
 
@@ -11,12 +12,15 @@ func (s *server) mapHandlers() {
 
 	userGroup := v1.Group("/user")
 
-	// Init useCases
-	userUseCase := userUC.NewUserUseCase()
+	// init repositories
+	userRepository := userRepo.NewUserRepository()
 
-	// Init http handlers
+	// init useCases
+	userUseCase := userUC.NewUserUseCase(userRepository)
+
+	// init http handlers
 	userHandler := userHttp.NewUserHandlers(userUseCase)
 
-	// Map Routes
+	// map Routes
 	userHttp.MapRoutes(userGroup, userHandler)
 }
