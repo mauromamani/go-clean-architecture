@@ -3,15 +3,21 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mauromamani/go-clean-architecture/config"
+	"github.com/mauromamani/go-clean-architecture/ent"
 )
 
 type server struct {
-	cfg *config.Config
-	gin *gin.Engine
+	cfg    *config.Config
+	gin    *gin.Engine
+	client *ent.Client
 }
 
-func NewServer(cfg *config.Config) *server {
-	return &server{gin: gin.Default(), cfg: cfg}
+func NewServer(cfg *config.Config, client *ent.Client) *server {
+	return &server{
+		gin:    gin.Default(),
+		cfg:    cfg,
+		client: client,
+	}
 }
 
 // Run: run server on port 3000

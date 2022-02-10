@@ -13,7 +13,7 @@ func (s *server) mapHandlers() {
 	userGroup := v1.Group("/user")
 
 	// init repositories
-	userRepository := userRepo.NewUserRepository()
+	userRepository := userRepo.NewUserRepository(s.client)
 
 	// init useCases
 	userUseCase := userUC.NewUserUseCase(userRepository)

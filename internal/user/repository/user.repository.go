@@ -1,34 +1,43 @@
 package repository
 
-import "github.com/mauromamani/go-clean-architecture/internal/user"
+import (
+	"context"
 
-type userRepository struct{}
+	"github.com/mauromamani/go-clean-architecture/ent"
+	"github.com/mauromamani/go-clean-architecture/internal/user"
+)
 
-func NewUserRepository() user.Repository {
-	return &userRepository{}
+type userRepository struct {
+	client *ent.Client
+}
+
+func NewUserRepository(client *ent.Client) user.Repository {
+	return &userRepository{
+		client: client,
+	}
 }
 
 // Get
-func (r *userRepository) Get() {
+func (r *userRepository) Get(ctx context.Context) {
 
 }
 
 // GetById
-func (r *userRepository) GetById() {
+func (r *userRepository) GetById(ctx context.Context) {
 
 }
 
 // Create
-func (r *userRepository) Create() {
+func (r *userRepository) Create(ctx context.Context) {
 
 }
 
 // Update
-func (r *userRepository) Update() {
+func (r *userRepository) Update(ctx context.Context) {
 
 }
 
 // Delete
-func (r *userRepository) Delete() {
+func (r *userRepository) Delete(ctx context.Context) {
 
 }
