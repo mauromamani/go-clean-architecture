@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 )
 
@@ -9,8 +10,10 @@ type userHandlers struct {
 	useCase user.UseCase
 }
 
-func NewUserHandlers(userUC user.UseCase) user.Handlers {
-	return &userHandlers{useCase: userUC}
+func NewUserHandlers(useCase user.UseCase) user.Handlers {
+	return &userHandlers{
+		useCase: useCase,
+	}
 }
 
 // Get
@@ -35,9 +38,18 @@ func (h *userHandlers) GetById(c *gin.Context) {
 func (h *userHandlers) Create(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	h.useCase.Create(ctx)
+	user := &ent.User{}
+	if err := c.Bind(user); err != nil {
+		c.JSON(404, err)
+	}
 
-	c.JSON(200, "Create")
+	newUser, err := h.useCase.Create(ctx, user)
+	if err != nil {
+		c.JSON(404, err)
+		return
+	}
+
+	c.JSON(200, newUser)
 }
 
 // Update

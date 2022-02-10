@@ -28,8 +28,18 @@ func (r *userRepository) GetById(ctx context.Context) {
 }
 
 // Create
-func (r *userRepository) Create(ctx context.Context) {
+func (r *userRepository) Create(ctx context.Context, user *ent.User) (*ent.User, error) {
+	u, err := r.client.User.Create().
+		SetName(user.Name).
+		SetPassword(user.Password).
+		SetEmail(user.Email).
+		Save(ctx)
 
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 // Update

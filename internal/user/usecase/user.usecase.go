@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 )
 
@@ -25,8 +26,13 @@ func (u *userUseCase) GetById(ctx context.Context) {
 }
 
 // Create
-func (u *userUseCase) Create(ctx context.Context) {
-	u.userRepository.Create(ctx)
+func (u *userUseCase) Create(ctx context.Context, user *ent.User) (*ent.User, error) {
+	newUser, err := u.userRepository.Create(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return newUser, nil
 }
 
 // Update
