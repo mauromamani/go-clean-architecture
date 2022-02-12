@@ -5,6 +5,7 @@ import (
 
 	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
+	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 )
 
 type userUseCase struct {
@@ -17,25 +18,50 @@ func NewUserUseCase(userRepo user.Repository) user.UseCase {
 
 // Get
 func (u *userUseCase) Get(ctx context.Context) ([]*ent.User, error) {
-	return u.userRepository.Get(ctx)
+	users, err := u.userRepository.Get(ctx)
+	if err != nil {
+		return nil, httpErrors.NewInternalServerError(err)
+	}
+
+	return users, nil
 }
 
 // GetById
 func (u *userUseCase) GetById(ctx context.Context, id int) (*ent.User, error) {
-	return u.userRepository.GetById(ctx, id)
+	user, err := u.userRepository.GetById(ctx, id)
+	if err != nil {
+		return nil, httpErrors.NewInternalServerError(err)
+	}
+
+	return user, nil
 }
 
 // Create
 func (u *userUseCase) Create(ctx context.Context, user *ent.User) (*ent.User, error) {
-	return u.userRepository.Create(ctx, user)
+	newUser, err := u.userRepository.Create(ctx, user)
+	if err != nil {
+		return nil, httpErrors.NewInternalServerError(err)
+	}
+
+	return newUser, nil
 }
 
 // Update
 func (u *userUseCase) Update(ctx context.Context, user *ent.User) (*ent.User, error) {
-	return u.userRepository.Update(ctx, user)
+	updatedUser, err := u.userRepository.Update(ctx, user)
+	if err != nil {
+		return nil, httpErrors.NewInternalServerError(err)
+	}
+
+	return updatedUser, nil
 }
 
 // Delete
 func (u *userUseCase) Delete(ctx context.Context, id int) error {
-	return u.userRepository.Delete(ctx, id)
+	err := u.userRepository.Delete(ctx, id)
+	if err != nil {
+		return httpErrors.NewInternalServerError(err)
+	}
+
+	return nil
 }
