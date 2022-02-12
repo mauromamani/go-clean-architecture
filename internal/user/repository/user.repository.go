@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
@@ -24,7 +25,7 @@ func (r *userRepository) Get(ctx context.Context) ([]*ent.User, error) {
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Get: failed querying users: %w", err)
 	}
 
 	return users, nil
@@ -35,7 +36,7 @@ func (r *userRepository) GetById(ctx context.Context, id int) (*ent.User, error)
 	u, err := r.client.User.Get(ctx, id)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GetById: failed querying user: %w", err)
 	}
 
 	return u, nil
@@ -51,7 +52,7 @@ func (r *userRepository) Create(ctx context.Context, user *ent.User) (*ent.User,
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Create: failed creating user: %w", err)
 	}
 
 	return u, nil
@@ -67,7 +68,7 @@ func (r *userRepository) Update(ctx context.Context, user *ent.User) (*ent.User,
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Update: failed updating user: %w", err)
 	}
 
 	return userUpdated, nil
@@ -80,7 +81,7 @@ func (r *userRepository) Delete(ctx context.Context, id int) error {
 		Exec(ctx)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Delete : failed deleting user: %w", err)
 	}
 
 	return nil
