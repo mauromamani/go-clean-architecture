@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
+	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 )
 
 type userHandlers struct {
@@ -25,7 +26,7 @@ func (h *userHandlers) Get(c *gin.Context) {
 	users, err := h.useCase.Get(ctx)
 
 	if err != nil {
-		c.JSON(200, "Bad Query")
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
@@ -45,7 +46,7 @@ func (h *userHandlers) GetById(c *gin.Context) {
 	user, err := h.useCase.GetById(ctx, id)
 
 	if err != nil {
-		c.JSON(400, "Bad query")
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
@@ -63,7 +64,7 @@ func (h *userHandlers) Create(c *gin.Context) {
 
 	newUser, err := h.useCase.Create(ctx, user)
 	if err != nil {
-		c.JSON(404, err)
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
@@ -77,7 +78,7 @@ func (h *userHandlers) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		c.JSON(400, "Bad id")
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
@@ -111,7 +112,7 @@ func (h *userHandlers) Delete(c *gin.Context) {
 	err = h.useCase.Delete(ctx, id)
 
 	if err != nil {
-		c.JSON(400, "Error delete")
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 

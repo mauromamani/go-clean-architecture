@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 var (
@@ -39,6 +40,15 @@ func (e RestError) Causes() interface{} {
 	return e.ErrCauses
 }
 
+// New Rest Error
+func NewRestError(status int, err string, causes interface{}) IRestError {
+	return RestError{
+		ErrStatus: status,
+		ErrError:  err,
+		ErrCauses: causes,
+	}
+}
+
 // NewInternalServerError:
 func NewInternalServerError(causes interface{}) IRestError {
 	return RestError{
@@ -46,4 +56,23 @@ func NewInternalServerError(causes interface{}) IRestError {
 		ErrError:  errInternalServer.Error(),
 		ErrCauses: causes,
 	}
+}
+
+// ParseErrors
+func ParseErrors(err error) IRestError {
+	switch {
+	case strings.Contains(strings.ToLower(err.Error()), "failed creating user"):
+		return NewRestError(http.StatusBadRequest, "Failed creating user", err)
+	default:
+		if restErr, ok := err.(RestError); ok {
+			return restErr
+		}
+
+		return NewInternalServerError(err)
+	}
+}
+
+// ErrorResponse:
+func ErrorResponse(err error) (int, interface{}) {
+	return ParseErrors(err).Status(), ParseErrors(err)
 }
