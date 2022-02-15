@@ -36,6 +36,16 @@ func (u *userUseCase) GetById(ctx context.Context, id int) (*ent.User, error) {
 	return user, nil
 }
 
+// GetByEmail
+func (u *userUseCase) GetByEmail(ctx context.Context, email string) (*ent.User, error) {
+	user, err := u.userRepository.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, httpErrors.NewInternalServerError(err)
+	}
+
+	return user, nil
+}
+
 // Create
 func (u *userUseCase) Create(ctx context.Context, user *ent.User) (*ent.User, error) {
 	newUser, err := u.userRepository.Create(ctx, user)
