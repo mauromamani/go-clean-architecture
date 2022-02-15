@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/mauromamani/go-clean-architecture/ent"
+	userEnt "github.com/mauromamani/go-clean-architecture/ent/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 )
 
@@ -37,6 +38,20 @@ func (r *userRepository) GetById(ctx context.Context, id int) (*ent.User, error)
 
 	if err != nil {
 		return nil, fmt.Errorf("userRepository.GetById: failed querying user: %w", err)
+	}
+
+	return u, nil
+}
+
+// GetByEmail
+func (r *userRepository) GetByEmail(ctx context.Context, email string) (*ent.User, error) {
+	u, err := r.client.User.
+		Query().
+		Where(userEnt.Email(email)).
+		Only(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("userRepository.GetByEmail: failed querying user: %w", err)
 	}
 
 	return u, nil
