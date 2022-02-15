@@ -78,7 +78,7 @@ func (h *userHandlers) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		c.JSON(httpErrors.ErrorResponse(err))
+		c.JSON(400, "Error Update")
 		return
 	}
 
@@ -91,7 +91,7 @@ func (h *userHandlers) Update(c *gin.Context) {
 
 	updatedUser, err := h.useCase.Update(ctx, user)
 	if err != nil {
-		c.JSON(400, "Error Update")
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
