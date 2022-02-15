@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
@@ -48,6 +49,11 @@ func (u *userUseCase) GetByEmail(ctx context.Context, email string) (*ent.User, 
 
 // Create
 func (u *userUseCase) Create(ctx context.Context, user *ent.User) (*ent.User, error) {
+	existsUser, err := u.userRepository.GetByEmail(ctx, user.Email)
+	if existsUser != nil || err == nil {
+		return nil, httpErrors.NewRestError(http.StatusBadRequest, httpErrors.ErrEmailAlreadyExists, nil)
+	}
+
 	newUser, err := u.userRepository.Create(ctx, user)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
