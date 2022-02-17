@@ -7,6 +7,7 @@ import (
 	"github.com/mauromamani/go-clean-architecture/ent"
 	userEnt "github.com/mauromamani/go-clean-architecture/ent/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
+	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
 )
 
 type userRepository struct {
@@ -58,7 +59,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (*ent.Use
 }
 
 // Create
-func (r *userRepository) Create(ctx context.Context, user *ent.User) (*ent.User, error) {
+func (r *userRepository) Create(ctx context.Context, user *dtos.CreateUserDto) (*ent.User, error) {
 	u, err := r.client.User.
 		Create().
 		SetName(user.Name).

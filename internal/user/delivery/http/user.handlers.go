@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
+	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
 	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 )
 
@@ -57,7 +58,7 @@ func (h *userHandlers) GetById(c *gin.Context) {
 func (h *userHandlers) Create(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	user := &ent.User{}
+	user := &dtos.CreateUserDto{}
 	if err := c.Bind(user); err != nil {
 		c.JSON(404, err)
 	}
