@@ -34,8 +34,8 @@ func ValidateStruct(ctx context.Context, s interface{}) error {
 	return validate.StructCtx(ctx, s)
 }
 
-// MapErrors: return translated errors in a map
-func MapErrors(err error) map[string]interface{} {
+// MapTranslatedErrors: return translated errors in a map
+func MapTranslatedErrors(err error) map[string]interface{} {
 	errors := make(map[string]interface{})
 
 	for _, err := range err.(validator.ValidationErrors) {
