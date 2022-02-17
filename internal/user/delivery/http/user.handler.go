@@ -8,6 +8,7 @@ import (
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
 	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
+	"github.com/mauromamani/go-clean-architecture/pkg/utils"
 )
 
 type userHandlers struct {
@@ -59,8 +60,9 @@ func (h *userHandlers) Create(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	user := &dtos.CreateUserDto{}
-	if err := c.Bind(user); err != nil {
-		c.JSON(404, err)
+	if err := utils.ReadRequest(c, user); err != nil {
+		c.JSON(404, err.Error())
+		return
 	}
 
 	newUser, err := h.useCase.Create(ctx, user)
