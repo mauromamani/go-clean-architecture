@@ -61,7 +61,7 @@ func (h *userHandlers) Create(c *gin.Context) {
 
 	user := &dtos.CreateUserDto{}
 	if err := utils.ReadRequest(c, user); err != nil {
-		c.JSON(404, err.Error())
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
