@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/mauromamani/go-clean-architecture/pkg/validator"
 )
 
 const (
@@ -25,7 +27,7 @@ type IRestError interface {
 // Rest error struct
 type RestError struct {
 	ErrStatus int         `json:"status,omitempty"`
-	ErrError  string      `json:"error,omitempty"`
+	ErrError  interface{} `json:"error,omitempty"`
 	ErrCauses interface{} `json:"-"`
 }
 
@@ -45,7 +47,7 @@ func (e RestError) Causes() interface{} {
 }
 
 // New Rest Error
-func NewRestError(status int, err string, causes interface{}) IRestError {
+func NewRestError(status int, err interface{}, causes interface{}) IRestError {
 	return RestError{
 		ErrStatus: status,
 		ErrError:  err,
@@ -77,6 +79,9 @@ func ParseErrors(err error) IRestError {
 	case strings.Contains(strings.ToLower(err.Error()), "failed querying"):
 		return NewRestError(http.StatusBadRequest, "Failed querying entity record", err)
 
+	case strings.Contains(strings.ToLower(err.Error()), "field validation"):
+		return parseValidatorError(err)
+
 	default:
 		if restErr, ok := err.(RestError); ok {
 			return restErr
@@ -84,6 +89,11 @@ func ParseErrors(err error) IRestError {
 
 		return NewInternalServerError(err)
 	}
+}
+
+func parseValidatorError(err error) IRestError {
+	errors := validator.MapTranslatedErrors(err)
+	return NewRestError(http.StatusBadRequest, errors, err)
 }
 
 // ErrorResponse:
