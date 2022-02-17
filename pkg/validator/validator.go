@@ -26,9 +26,21 @@ func init() {
 		log.Fatal(err)
 	}
 
+	loadTranslations()
 }
 
+// ValidateStruct:
 func ValidateStruct(ctx context.Context, s interface{}) error {
-	loadTranslations()
 	return validate.StructCtx(ctx, s)
+}
+
+// MapErrors: return translated errors in a map
+func MapErrors(err error) map[string]interface{} {
+	errors := make(map[string]interface{})
+
+	for _, err := range err.(validator.ValidationErrors) {
+		errors[err.Field()] = err.Translate(trans)
+	}
+
+	return errors
 }
