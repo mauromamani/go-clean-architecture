@@ -75,19 +75,27 @@ func (r *userRepository) Create(ctx context.Context, user *dtos.CreateUserDto) (
 }
 
 // Update
-func (r *userRepository) Update(ctx context.Context, user *ent.User) (*ent.User, error) {
-	userUpdated, err := r.client.User.
-		UpdateOneID(user.ID).
-		SetName(user.Name).
-		SetEmail(user.Email).
-		SetPassword(user.Password).
-		Save(ctx)
+func (r *userRepository) Update(ctx context.Context, id int, user *dtos.UpdateUserDto) (*ent.User, error) {
+	userUpdated := r.client.User.UpdateOneID(id)
 
+	if user.Name != nil {
+		userUpdated.SetName(*user.Name)
+	}
+
+	if user.Email != nil {
+		userUpdated.SetEmail(*user.Email)
+	}
+
+	if user.Password != nil {
+		userUpdated.SetPassword(*user.Password)
+	}
+
+	u, err := userUpdated.Save(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("userRepository.Update: failed updating user: %w", err)
 	}
 
-	return userUpdated, nil
+	return u, nil
 }
 
 // Delete

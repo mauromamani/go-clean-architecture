@@ -64,8 +64,8 @@ func (u *userUseCase) Create(ctx context.Context, user *dtos.CreateUserDto) (*en
 }
 
 // Update
-func (u *userUseCase) Update(ctx context.Context, user *ent.User) (*ent.User, error) {
-	updatedUser, err := u.userRepository.Update(ctx, user)
+func (u *userUseCase) Update(ctx context.Context, id int, user *dtos.UpdateUserDto) (*ent.User, error) {
+	updatedUser, err := u.userRepository.Update(ctx, id, user)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}

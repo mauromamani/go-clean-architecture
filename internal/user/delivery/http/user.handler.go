@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
 	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
@@ -85,14 +84,13 @@ func (h *userHandlers) Update(c *gin.Context) {
 		return
 	}
 
-	user := &ent.User{}
-	if err := c.Bind(user); err != nil {
-		c.JSON(404, err)
+	user := &dtos.UpdateUserDto{}
+	if err := utils.ReadRequest(c, user); err != nil {
+		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
-	user.ID = id
 
-	updatedUser, err := h.useCase.Update(ctx, user)
+	updatedUser, err := h.useCase.Update(ctx, id, user)
 	if err != nil {
 		c.JSON(httpErrors.ErrorResponse(err))
 		return
