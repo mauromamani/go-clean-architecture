@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
@@ -36,7 +37,19 @@ func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*ent
 
 // CreateUser:
 func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error) {
-	return nil, nil
+	args := []interface{}{user.Name, user.Email, user.Password}
+
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	u := &entity.User{}
+
+	err := r.DB.QueryRowContext(ctx, createUserQuery, args...).Scan(u.ID, u.Name, u.Email, u.Password, u.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 // UpdateUser:
