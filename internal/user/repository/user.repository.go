@@ -2,111 +2,44 @@ package repository
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/mauromamani/go-clean-architecture/ent"
-	userEnt "github.com/mauromamani/go-clean-architecture/ent/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
+	"github.com/mauromamani/go-clean-architecture/internal/user/entity"
 )
 
-type userRepository struct {
-	client *ent.Client
+type userRepository struct{}
+
+func NewUserRepository() user.Repository {
+	return &userRepository{}
 }
 
-func NewUserRepository(client *ent.Client) user.Repository {
-	return &userRepository{
-		client: client,
-	}
+// GetUser:
+func (r *userRepository) GetUser(ctx context.Context) (*entity.User, error) {
+	return nil, nil
 }
 
-// Get
-func (r *userRepository) Get(ctx context.Context) ([]*ent.User, error) {
-	users, err := r.client.User.
-		Query().
-		All(ctx)
-
-	if err != nil {
-		return nil, fmt.Errorf("userRepository.Get: failed querying users: %w", err)
-	}
-
-	return users, nil
+// GetUserById:
+func (r *userRepository) GetUserById(ctx context.Context, id int) (*entity.User, error) {
+	return nil, nil
 }
 
-// GetById
-func (r *userRepository) GetById(ctx context.Context, id int) (*ent.User, error) {
-	u, err := r.client.User.Get(ctx, id)
-
-	if err != nil {
-		return nil, fmt.Errorf("userRepository.GetById: failed querying user: %w", err)
-	}
-
-	return u, nil
+// GetUserByEmail:
+func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
+	return nil, nil
 }
 
-// GetByEmail
-func (r *userRepository) GetByEmail(ctx context.Context, email string) (*ent.User, error) {
-	u, err := r.client.User.
-		Query().
-		Where(userEnt.Email(email)).
-		Only(ctx)
-
-	if err != nil {
-		return nil, fmt.Errorf("userRepository.GetByEmail: failed querying user: %w", err)
-	}
-
-	return u, nil
+// CreateUser:
+func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error) {
+	return nil, nil
 }
 
-// Create
-func (r *userRepository) Create(ctx context.Context, user *dtos.CreateUserDto) (*ent.User, error) {
-	u, err := r.client.User.
-		Create().
-		SetName(user.Name).
-		SetPassword(user.Password).
-		SetEmail(user.Email).
-		Save(ctx)
-
-	if err != nil {
-		return nil, fmt.Errorf("userRepository.Create: failed creating user: %w", err)
-	}
-
-	return u, nil
+// UpdateUser:
+func (r *userRepository) UpdateUser(ctx context.Context, id int, user *dtos.UpdateUserDto) (*entity.User, error) {
+	return nil, nil
 }
 
-// Update
-func (r *userRepository) Update(ctx context.Context, id int, user *dtos.UpdateUserDto) (*ent.User, error) {
-	userUpdated := r.client.User.UpdateOneID(id)
-
-	if user.Name != nil {
-		userUpdated.SetName(*user.Name)
-	}
-
-	if user.Email != nil {
-		userUpdated.SetEmail(*user.Email)
-	}
-
-	if user.Password != nil {
-		userUpdated.SetPassword(*user.Password)
-	}
-
-	u, err := userUpdated.Save(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("userRepository.Update: failed updating user: %w", err)
-	}
-
-	return u, nil
-}
-
-// Delete
-func (r *userRepository) Delete(ctx context.Context, id int) error {
-	err := r.client.User.
-		DeleteOneID(id).
-		Exec(ctx)
-
-	if err != nil {
-		return fmt.Errorf("userRepository.Delete : failed deleting user: %w", err)
-	}
-
+// DeleteUser:
+func (r *userRepository) DeleteUser(ctx context.Context, id int) error {
 	return nil
 }
