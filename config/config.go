@@ -13,7 +13,10 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port string
+	Port         string
+	IdleTimeout  int
+	ReadTimeout  int
+	WriteTimeout int
 }
 
 type PostgresConfig struct {

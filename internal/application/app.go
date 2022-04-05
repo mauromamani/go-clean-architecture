@@ -20,9 +20,9 @@ func New(cfg *config.Config) *application {
 		srv: &http.Server{
 			Addr:         cfg.Server.Port,
 			ErrorLog:     log.Default(),
-			IdleTimeout:  time.Minute,
-			ReadTimeout:  10 * time.Second,
-			WriteTimeout: 30 * time.Second,
+			IdleTimeout:  time.Duration(cfg.Server.IdleTimeout) * time.Minute,
+			ReadTimeout:  time.Duration(cfg.Server.ReadTimeout) * time.Second,
+			WriteTimeout: time.Duration(cfg.Server.WriteTimeout) * time.Second,
 		},
 	}
 }

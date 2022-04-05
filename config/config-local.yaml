@@ -1,5 +1,9 @@
 server:
   Port: :5000
+  IdleTimeout: 1
+  ReadTimeout: 10
+  WriteTimeout: 30
+
 
 postgres:
   DSN: postgres://clean:1234@localhost/clean-architecture
