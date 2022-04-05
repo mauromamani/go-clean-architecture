@@ -61,13 +61,10 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	newUser, err := h.useCase.CreateUser(ctx, user)
-	if err != nil {
-		return
-	}
+	newUser, _ := h.useCase.CreateUser(ctx, user)
 	print(newUser)
 
-	w.Write([]byte("getuserbiyd"))
+	w.Write([]byte("CREATE user"))
 }
 
 // UpdateUser:
@@ -87,14 +84,11 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	updatedUser, err := h.useCase.UpdateUser(ctx, 1, user)
-	if err != nil {
-		return
-	}
+	updatedUser, _ := h.useCase.UpdateUser(ctx, 1, user)
 
 	print(updatedUser)
 
-	w.Write([]byte("getuserbiyd"))
+	w.Write([]byte("update"))
 }
 
 // DeleteUser:
@@ -108,10 +102,7 @@ func (h *userHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-	err := h.useCase.DeleteUser(ctx, 1)
-	if err != nil {
-		return
-	}
+	h.useCase.DeleteUser(ctx, 1)
 
-	w.Write([]byte("getuserbiyd"))
+	w.Write([]byte("delete"))
 }
