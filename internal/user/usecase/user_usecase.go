@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
+	"github.com/mauromamani/go-clean-architecture/internal/user/entity"
 	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 )
 
@@ -18,9 +18,9 @@ func NewUserUseCase(userRepo user.Repository) user.UseCase {
 	return &userUseCase{userRepository: userRepo}
 }
 
-// Get
-func (u *userUseCase) Get(ctx context.Context) ([]*ent.User, error) {
-	users, err := u.userRepository.Get(ctx)
+// GetUser
+func (u *userUseCase) GetUser(ctx context.Context) (*entity.User, error) {
+	users, err := u.userRepository.GetUser(ctx)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}
@@ -28,9 +28,9 @@ func (u *userUseCase) Get(ctx context.Context) ([]*ent.User, error) {
 	return users, nil
 }
 
-// GetById
-func (u *userUseCase) GetById(ctx context.Context, id int) (*ent.User, error) {
-	user, err := u.userRepository.GetById(ctx, id)
+// GetUserById
+func (u *userUseCase) GetUserById(ctx context.Context, id int) (*entity.User, error) {
+	user, err := u.userRepository.GetUserById(ctx, id)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}
@@ -38,9 +38,9 @@ func (u *userUseCase) GetById(ctx context.Context, id int) (*ent.User, error) {
 	return user, nil
 }
 
-// GetByEmail
-func (u *userUseCase) GetByEmail(ctx context.Context, email string) (*ent.User, error) {
-	user, err := u.userRepository.GetByEmail(ctx, email)
+// GetUserByEmail
+func (u *userUseCase) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
+	user, err := u.userRepository.GetUserByEmail(ctx, email)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}
@@ -48,14 +48,14 @@ func (u *userUseCase) GetByEmail(ctx context.Context, email string) (*ent.User, 
 	return user, nil
 }
 
-// Create
-func (u *userUseCase) Create(ctx context.Context, user *dtos.CreateUserDto) (*ent.User, error) {
-	existsUser, err := u.userRepository.GetByEmail(ctx, user.Email)
+// CreateUser
+func (u *userUseCase) CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error) {
+	existsUser, err := u.userRepository.GetUserByEmail(ctx, user.Email)
 	if existsUser != nil || err == nil {
 		return nil, httpErrors.NewRestError(http.StatusBadRequest, httpErrors.ErrEmailAlreadyExists, nil)
 	}
 
-	newUser, err := u.userRepository.Create(ctx, user)
+	newUser, err := u.userRepository.CreateUser(ctx, user)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}
@@ -63,9 +63,9 @@ func (u *userUseCase) Create(ctx context.Context, user *dtos.CreateUserDto) (*en
 	return newUser, nil
 }
 
-// Update
-func (u *userUseCase) Update(ctx context.Context, id int, user *dtos.UpdateUserDto) (*ent.User, error) {
-	updatedUser, err := u.userRepository.Update(ctx, id, user)
+// UpdateUser
+func (u *userUseCase) UpdateUser(ctx context.Context, id int, user *dtos.UpdateUserDto) (*entity.User, error) {
+	updatedUser, err := u.userRepository.UpdateUser(ctx, id, user)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}
@@ -73,9 +73,9 @@ func (u *userUseCase) Update(ctx context.Context, id int, user *dtos.UpdateUserD
 	return updatedUser, nil
 }
 
-// Delete
-func (u *userUseCase) Delete(ctx context.Context, id int) error {
-	err := u.userRepository.Delete(ctx, id)
+// DeleteUser
+func (u *userUseCase) DeleteUser(ctx context.Context, id int) error {
+	err := u.userRepository.DeleteUser(ctx, id)
 	if err != nil {
 		return httpErrors.NewInternalServerError(err)
 	}

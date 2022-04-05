@@ -3,15 +3,15 @@ package user
 import (
 	"context"
 
-	"github.com/mauromamani/go-clean-architecture/ent"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
+	"github.com/mauromamani/go-clean-architecture/internal/user/entity"
 )
 
 type UseCase interface {
-	Get(ctx context.Context) ([]*ent.User, error)
-	GetById(ctx context.Context, id int) (*ent.User, error)
-	GetByEmail(ctx context.Context, email string) (*ent.User, error)
-	Create(ctx context.Context, user *dtos.CreateUserDto) (*ent.User, error)
-	Update(ctx context.Context, id int, user *dtos.UpdateUserDto) (*ent.User, error)
-	Delete(ctx context.Context, id int) error
+	GetUser(ctx context.Context) (*entity.User, error)
+	GetUserById(ctx context.Context, id int) (*entity.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
+	CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error)
+	UpdateUser(ctx context.Context, id int, user *dtos.UpdateUserDto) (*entity.User, error)
+	DeleteUser(ctx context.Context, id int) error
 }
