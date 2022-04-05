@@ -5,7 +5,6 @@ import (
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
-	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 )
 
 type userHandlers struct {
@@ -90,7 +89,6 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	updatedUser, err := h.useCase.UpdateUser(ctx, 1, user)
 	if err != nil {
-		c.JSON(httpErrors.ErrorResponse(err))
 		return
 	}
 
