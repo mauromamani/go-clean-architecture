@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/mauromamani/go-clean-architecture/config"
-	"github.com/mauromamani/go-clean-architecture/internal/server"
+	"github.com/mauromamani/go-clean-architecture/internal/application"
 )
 
 func main() {
@@ -20,7 +20,10 @@ func main() {
 		log.Fatalf("Failed to parse config: %v", err)
 	}
 
-	s := server.NewServer(cfg)
+	app := application.New(cfg)
 
-	s.Run()
+	err = app.Run()
+	if err != nil {
+		panic(err)
+	}
 }
