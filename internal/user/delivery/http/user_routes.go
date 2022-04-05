@@ -7,9 +7,9 @@ import (
 
 // MapRoutes: init each route with its http method
 func MapRoutes(userGroup *gin.RouterGroup, h user.Handlers) {
-	userGroup.GET("/", h.Get)
-	userGroup.GET("/:id", h.GetById)
-	userGroup.POST("/", h.Create)
-	userGroup.PUT("/:id", h.Update)
-	userGroup.DELETE("/:id", h.Delete)
+	userGroup.GET("/", h.GetUser)
+	userGroup.GET("/:id", h.GetUserById)
+	userGroup.POST("/", h.CreateUser)
+	userGroup.PATCH("/:id", h.UpdateUser)
+	userGroup.DELETE("/:id", h.DeleteUser)
 }

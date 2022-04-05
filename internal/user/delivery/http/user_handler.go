@@ -20,11 +20,11 @@ func NewUserHandlers(useCase user.UseCase) user.Handlers {
 	}
 }
 
-// Get
-func (h *userHandlers) Get(c *gin.Context) {
+// GetUser:
+func (h *userHandlers) GetUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	users, err := h.useCase.Get(ctx)
+	users, err := h.useCase.GetUser(ctx)
 
 	if err != nil {
 		c.JSON(httpErrors.ErrorResponse(err))
@@ -34,8 +34,8 @@ func (h *userHandlers) Get(c *gin.Context) {
 	c.JSON(200, users)
 }
 
-// GetById
-func (h *userHandlers) GetById(c *gin.Context) {
+// GetUserById:
+func (h *userHandlers) GetUserById(c *gin.Context) {
 	ctx := c.Request.Context()
 	id, err := strconv.Atoi(c.Param("id"))
 
@@ -44,7 +44,7 @@ func (h *userHandlers) GetById(c *gin.Context) {
 		return
 	}
 
-	user, err := h.useCase.GetById(ctx, id)
+	user, err := h.useCase.GetUserById(ctx, id)
 
 	if err != nil {
 		c.JSON(httpErrors.ErrorResponse(err))
@@ -54,8 +54,8 @@ func (h *userHandlers) GetById(c *gin.Context) {
 	c.JSON(200, user)
 }
 
-// Create
-func (h *userHandlers) Create(c *gin.Context) {
+// CreateUser:
+func (h *userHandlers) CreateUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	user := &dtos.CreateUserDto{}
@@ -64,7 +64,7 @@ func (h *userHandlers) Create(c *gin.Context) {
 		return
 	}
 
-	newUser, err := h.useCase.Create(ctx, user)
+	newUser, err := h.useCase.CreateUser(ctx, user)
 	if err != nil {
 		c.JSON(httpErrors.ErrorResponse(err))
 		return
@@ -73,8 +73,8 @@ func (h *userHandlers) Create(c *gin.Context) {
 	c.JSON(200, newUser)
 }
 
-// Update
-func (h *userHandlers) Update(c *gin.Context) {
+// UpdateUser:
+func (h *userHandlers) UpdateUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	id, err := strconv.Atoi(c.Param("id"))
@@ -90,7 +90,7 @@ func (h *userHandlers) Update(c *gin.Context) {
 		return
 	}
 
-	updatedUser, err := h.useCase.Update(ctx, id, user)
+	updatedUser, err := h.useCase.UpdateUser(ctx, id, user)
 	if err != nil {
 		c.JSON(httpErrors.ErrorResponse(err))
 		return
@@ -99,8 +99,8 @@ func (h *userHandlers) Update(c *gin.Context) {
 	c.JSON(200, updatedUser)
 }
 
-// Delete
-func (h *userHandlers) Delete(c *gin.Context) {
+// DeleteUser:
+func (h *userHandlers) DeleteUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	id, err := strconv.Atoi(c.Param("id"))
@@ -110,7 +110,7 @@ func (h *userHandlers) Delete(c *gin.Context) {
 		return
 	}
 
-	err = h.useCase.Delete(ctx, id)
+	err = h.useCase.DeleteUser(ctx, id)
 
 	if err != nil {
 		c.JSON(httpErrors.ErrorResponse(err))
