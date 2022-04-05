@@ -5,6 +5,7 @@ import (
 
 	"github.com/mauromamani/go-clean-architecture/config"
 	"github.com/mauromamani/go-clean-architecture/internal/application"
+	"github.com/mauromamani/go-clean-architecture/pkg/database/postgres"
 )
 
 func main() {
@@ -19,6 +20,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to parse config: %v", err)
 	}
+
+	_, err = postgres.NewConnection(cfg)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Connection pool established!")
 
 	app := application.New(cfg)
 

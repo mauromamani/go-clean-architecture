@@ -8,16 +8,20 @@ import (
 )
 
 type Config struct {
-	Server ServerConfig
-	SQLite SQLiteConfig
+	Server   ServerConfig
+	Postgres PostgresConfig
 }
 
 type ServerConfig struct {
 	Port string
 }
 
-type SQLiteConfig struct {
-	FileName string
+type PostgresConfig struct {
+	DSN            string
+	PgDriver       string
+	PgMaxOpenConns int
+	PgMaxIdleConns int
+	PgMaxIdleTime  string
 }
 
 // Load config file from given path

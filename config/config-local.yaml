@@ -1,5 +1,9 @@
 server:
   Port: :5000
 
-sqlite:
-  FileName: sqlite.db
+postgres:
+  DSN: postgres://clean:1234@localhost/clean-architecture
+  PgDriver: pgx
+  PgMaxOpenConns: 25
+  PgMaxIdleConns: 25
+  PgMaxIdleTime: 15m
