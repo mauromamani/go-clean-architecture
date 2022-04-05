@@ -15,7 +15,7 @@ func (s *application) mapHandlers() http.Handler {
 	router := httprouter.New()
 
 	// init repositories
-	userRepository := userRepo.NewUserRepository()
+	userRepository := userRepo.NewUserRepository(s.db)
 
 	// init useCases
 	userUseCase := userUC.NewUserUseCase(userRepository)

@@ -21,13 +21,13 @@ func main() {
 		log.Fatalf("Failed to parse config: %v", err)
 	}
 
-	_, err = postgres.NewConnection(cfg)
+	db, err := postgres.NewConnection(cfg)
 	if err != nil {
 		panic(err)
 	}
 	log.Println("Connection pool established!")
 
-	app := application.New(cfg)
+	app := application.New(cfg, db)
 
 	err = app.Run()
 	if err != nil {

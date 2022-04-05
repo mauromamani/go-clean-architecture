@@ -2,16 +2,21 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
 	"github.com/mauromamani/go-clean-architecture/internal/user/entity"
 )
 
-type userRepository struct{}
+type userRepository struct {
+	DB *sql.DB
+}
 
-func NewUserRepository() user.Repository {
-	return &userRepository{}
+func NewUserRepository(db *sql.DB) user.Repository {
+	return &userRepository{
+		DB: db,
+	}
 }
 
 // GetUser:
