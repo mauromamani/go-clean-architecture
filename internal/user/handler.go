@@ -1,11 +1,13 @@
 package user
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+)
 
 type Handlers interface {
-	GetUser(c *gin.Context)
-	GetUserById(c *gin.Context)
-	CreateUser(c *gin.Context)
-	UpdateUser(c *gin.Context)
-	DeleteUser(c *gin.Context)
+	GetUser(w http.ResponseWriter, r *http.Request)
+	GetUserById(w http.ResponseWriter, r *http.Request)
+	CreateUser(w http.ResponseWriter, r *http.Request)
+	UpdateUser(w http.ResponseWriter, r *http.Request)
+	DeleteUser(w http.ResponseWriter, r *http.Request)
 }

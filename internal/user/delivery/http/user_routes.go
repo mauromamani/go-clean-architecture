@@ -1,15 +1,13 @@
 package http
 
 import (
-	"github.com/gin-gonic/gin"
+	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 )
 
 // MapRoutes: init each route with its http method
-func MapRoutes(userGroup *gin.RouterGroup, h user.Handlers) {
-	userGroup.GET("/", h.GetUser)
-	userGroup.GET("/:id", h.GetUserById)
-	userGroup.POST("/", h.CreateUser)
-	userGroup.PATCH("/:id", h.UpdateUser)
-	userGroup.DELETE("/:id", h.DeleteUser)
+func MapRoutes(route *httprouter.Router, h user.Handlers) {
+	route.HandlerFunc(http.MethodGet, "/api/v1/users", h.GetUser)
 }
