@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/mauromamani/go-clean-architecture/pkg/validator"
 )
 
 type envelope map[string]interface{}
@@ -42,6 +44,7 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 
 	err := dec.Decode(&dst)
 
+	// TODO: Manejo de errores en el archivo de errores
 	if err != nil {
 		var syntaxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
@@ -78,9 +81,16 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 		}
 	}
 
+	// Only one json must be accepted
 	err = dec.Decode(&struct{}{})
 	if err != io.EOF {
 		return errors.New("body must only contain a single JSON value")
+	}
+
+	// Validate structDTO
+	err = validator.ValidateStruct(r.Context(), dst)
+	if err != nil {
+		return err
 	}
 
 	return nil
