@@ -42,14 +42,21 @@ func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDt
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	u := &entity.User{}
+	u := entity.User{}
 
-	err := r.DB.QueryRowContext(ctx, createUserQuery, args...).Scan(u.ID, u.Name, u.Email, u.Password, u.CreatedAt)
+	err := r.DB.QueryRowContext(ctx, createUserQuery, args...).Scan(
+		&u.ID,
+		&u.CreatedAt,
+		&u.Name,
+		&u.Email,
+		&u.Password,
+	)
+	// TODO: Manejo del error: unique key constraint
 	if err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
 // UpdateUser:

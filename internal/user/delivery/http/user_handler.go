@@ -1,10 +1,13 @@
 package http
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
+	"github.com/mauromamani/go-clean-architecture/pkg/utils"
 )
 
 type userHandlers struct {
@@ -56,14 +59,21 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	user := &dtos.CreateUserDto{}
-	// if err := utils.ReadRequest(c, user); err != nil {
-	// 	c.JSON(httpErrors.ErrorResponse(err))
-	// 	return
-	// }
+	err := utils.ReadJSON(w, r, user)
+	if err != nil {
+		log.Println(err)
+		log.Println("Bad Request: createUser.user_handler")
+		return
+	}
 
-	newUser, _ := h.useCase.CreateUser(ctx, user)
-	print(newUser)
+	c, err := h.useCase.CreateUser(ctx, user)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error creating user: createUser.user_handler")
+		return
+	}
 
+	fmt.Println(c)
 	w.Write([]byte("CREATE user"))
 }
 
