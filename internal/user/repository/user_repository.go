@@ -21,7 +21,7 @@ func NewUserRepository(db *sql.DB) user.Repository {
 }
 
 // GetUser:
-func (r *userRepository) GetUser(ctx context.Context) (*entity.User, error) {
+func (r *userRepository) GetUsers(ctx context.Context) ([]*entity.User, error) {
 	return nil, nil
 }
 

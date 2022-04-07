@@ -18,8 +18,8 @@ func NewUserUseCase(userRepo user.Repository) user.UseCase {
 }
 
 // GetUser:
-func (uc *userUseCase) GetUser(ctx context.Context) (*entity.User, error) {
-	users, err := uc.userRepository.GetUser(ctx)
+func (uc *userUseCase) GetUsers(ctx context.Context) ([]*entity.User, error) {
+	users, err := uc.userRepository.GetUsers(ctx)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
 	}

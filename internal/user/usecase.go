@@ -8,7 +8,7 @@ import (
 )
 
 type UseCase interface {
-	GetUser(ctx context.Context) (*entity.User, error)
+	GetUsers(ctx context.Context) ([]*entity.User, error)
 	GetUserById(ctx context.Context, id int) (*entity.User, error)
 	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
 	CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error)

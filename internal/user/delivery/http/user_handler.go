@@ -21,10 +21,10 @@ func NewUserHandlers(useCase user.UseCase) user.Handlers {
 }
 
 // GetUser:
-func (h *userHandlers) GetUser(w http.ResponseWriter, r *http.Request) {
+func (h *userHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	users, err := h.useCase.GetUser(ctx)
+	users, err := h.useCase.GetUsers(ctx)
 
 	if err != nil {
 		return
