@@ -17,7 +17,17 @@ const (
 		RETURNING *
 	`
 
-	deleteUserByIdQuery = `
+	updateUserQuery = `
+		UPDATE users
+		SET 
+			name = COALESCE(NULLIF($1, ''), name),
+			email = COALESCE(NULLIF($2, ''), email),
+			password = COALESCE(NULLIF($3, ''), password)
+		WHERE id = $4
+		RETURNING *
+	`
+
+	deleteUserQuery = `
 		DELETE FROM users
 		WHERE id = $1
 	`

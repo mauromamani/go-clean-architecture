@@ -89,7 +89,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDt
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	u := entity.User{}
+	var u entity.User
 
 	err := r.DB.QueryRowContext(ctx, createUserQuery, args...).Scan(
 		&u.ID,
@@ -108,7 +108,25 @@ func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDt
 
 // UpdateUser:
 func (r *userRepository) UpdateUser(ctx context.Context, id int64, user *dtos.UpdateUserDto) (*entity.User, error) {
-	return nil, nil
+	args := []interface{}{user.Name, user.Email, user.Password, id}
+
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var u entity.User
+	err := r.DB.QueryRowContext(ctx, updateUserQuery, args...).Scan(
+		&u.ID,
+		&u.CreatedAt,
+		&u.Name,
+		&u.Email,
+		&u.Password,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
 
 // DeleteUser:
@@ -116,7 +134,7 @@ func (r *userRepository) DeleteUser(ctx context.Context, id int64) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	result, err := r.DB.ExecContext(ctx, deleteUserByIdQuery, id)
+	result, err := r.DB.ExecContext(ctx, deleteUserQuery, id)
 	if err != nil {
 		return err
 	}

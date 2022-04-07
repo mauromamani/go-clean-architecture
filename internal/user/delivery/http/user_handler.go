@@ -98,24 +98,36 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	// id, err := strconv.Atoi(c.Param("id"))
-
-	// if err != nil {
-	// 	c.JSON(400, "Error Update")
-	// 	return
-	// }
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.ReadIDParam.user_handler")
+		return
+	}
 
 	user := &dtos.UpdateUserDto{}
-	// if err := utils.ReadRequest(c, user); err != nil {
-	// 	c.JSON(httpErrors.ErrorResponse(err))
-	// 	return
-	// }
 
-	updatedUser, _ := h.useCase.UpdateUser(ctx, 1, user)
+	err = utils.ReadJSON(w, r, user)
+	if err != nil {
+		if err != nil {
+			log.Println(err)
+			log.Println("Error: utils.ReadJSON.user_handler")
+			return
+		}
+	}
 
-	print(updatedUser)
+	updatedUser, err := h.useCase.UpdateUser(ctx, id, user)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: h.useCase.UpdateUser.user_handler")
+		return
+	}
 
-	w.Write([]byte("update"))
+	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": updatedUser}, nil)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.WriteJSON.user_handler")
+	}
 }
 
 // DeleteUser:
