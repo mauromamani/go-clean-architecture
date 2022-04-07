@@ -16,4 +16,9 @@ const (
 		VALUES ($1, $2, $3)
 		RETURNING *
 	`
+
+	deleteUserByIdQuery = `
+		DELETE FROM users
+		WHERE id = $1
+	`
 )

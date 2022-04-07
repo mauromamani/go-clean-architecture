@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
@@ -106,11 +107,29 @@ func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDt
 }
 
 // UpdateUser:
-func (r *userRepository) UpdateUser(ctx context.Context, id int, user *dtos.UpdateUserDto) (*entity.User, error) {
+func (r *userRepository) UpdateUser(ctx context.Context, id int64, user *dtos.UpdateUserDto) (*entity.User, error) {
 	return nil, nil
 }
 
 // DeleteUser:
-func (r *userRepository) DeleteUser(ctx context.Context, id int) error {
+func (r *userRepository) DeleteUser(ctx context.Context, id int64) error {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	result, err := r.DB.ExecContext(ctx, deleteUserByIdQuery, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// TODO: Agregar el error ErrRecordNotFound
+	if rowsAffected == 0 {
+		return errors.New("record not found")
+	}
+
 	return nil
 }

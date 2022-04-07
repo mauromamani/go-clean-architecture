@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -83,7 +84,10 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, nil)
+	headers := make(http.Header)
+	headers.Set("Location", fmt.Sprintf("/api/v1/users/%d", u.ID))
+
+	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, headers)
 	if err != nil {
 		log.Println(err)
 		log.Println("Error: utils.WriteJSON.user_handler")
@@ -118,14 +122,23 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 func (h *userHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	// id, err := strconv.Atoi(c.Param("id"))
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.ReadIDParam.user_handler")
+		return
+	}
 
-	// if err != nil {
-	// 	c.JSON(400, "Bad id")
-	// 	return
-	// }
+	err = h.useCase.DeleteUser(ctx, id)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: h.useCase.DeleteUser.user_handler")
+		return
+	}
 
-	h.useCase.DeleteUser(ctx, 1)
-
-	w.Write([]byte("delete"))
+	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": "user deleted!"}, nil)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.WriteJSON.user_handler")
+	}
 }

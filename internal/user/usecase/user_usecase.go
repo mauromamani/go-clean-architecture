@@ -59,7 +59,7 @@ func (uc *userUseCase) CreateUser(ctx context.Context, user *dtos.CreateUserDto)
 }
 
 // UpdateUser:
-func (uc *userUseCase) UpdateUser(ctx context.Context, id int, user *dtos.UpdateUserDto) (*entity.User, error) {
+func (uc *userUseCase) UpdateUser(ctx context.Context, id int64, user *dtos.UpdateUserDto) (*entity.User, error) {
 	updatedUser, err := uc.userRepository.UpdateUser(ctx, id, user)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
@@ -69,7 +69,7 @@ func (uc *userUseCase) UpdateUser(ctx context.Context, id int, user *dtos.Update
 }
 
 // DeleteUser:
-func (uc *userUseCase) DeleteUser(ctx context.Context, id int) error {
+func (uc *userUseCase) DeleteUser(ctx context.Context, id int64) error {
 	err := uc.userRepository.DeleteUser(ctx, id)
 	if err != nil {
 		return httpErrors.NewInternalServerError(err)

@@ -12,6 +12,6 @@ type Repository interface {
 	GetUserById(ctx context.Context, id int64) (*entity.User, error)
 	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
 	CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error)
-	UpdateUser(ctx context.Context, id int, user *dtos.UpdateUserDto) (*entity.User, error)
-	DeleteUser(ctx context.Context, id int) error
+	UpdateUser(ctx context.Context, id int64, user *dtos.UpdateUserDto) (*entity.User, error)
+	DeleteUser(ctx context.Context, id int64) error
 }
