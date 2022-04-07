@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -25,14 +24,17 @@ func (h *userHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	users, err := h.useCase.GetUsers(ctx)
-
 	if err != nil {
+		log.Println(err)
+		log.Println("Error: GetUsers.user_handler")
 		return
 	}
 
-	print(users)
-
-	w.Write([]byte("hello"))
+	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"users": users}, nil)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: WriteJSON.user_handler")
+	}
 }
 
 // GetUserById:
@@ -59,22 +61,26 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	user := &dtos.CreateUserDto{}
+
 	err := utils.ReadJSON(w, r, user)
 	if err != nil {
 		log.Println(err)
-		log.Println("Bad Request: createUser.user_handler")
+		log.Println("Error: utils.ReadJSON.user_handler")
 		return
 	}
 
-	c, err := h.useCase.CreateUser(ctx, user)
+	u, err := h.useCase.CreateUser(ctx, user)
 	if err != nil {
 		log.Println(err)
-		log.Println("Error creating user: createUser.user_handler")
+		log.Println("Error: h.useCase.CreateUser.user_handler")
 		return
 	}
 
-	fmt.Println(c)
-	w.Write([]byte("CREATE user"))
+	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, nil)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.WriteJSON.user_handler")
+	}
 }
 
 // UpdateUser:

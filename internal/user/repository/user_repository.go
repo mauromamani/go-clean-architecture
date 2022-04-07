@@ -22,7 +22,38 @@ func NewUserRepository(db *sql.DB) user.Repository {
 
 // GetUser:
 func (r *userRepository) GetUsers(ctx context.Context) ([]*entity.User, error) {
-	return nil, nil
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	rows, err := r.DB.QueryContext(ctx, getUsersQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	users := []*entity.User{}
+	for rows.Next() {
+		var u entity.User
+		err := rows.Scan(
+			&u.ID,
+			&u.Name,
+			&u.Email,
+			&u.CreatedAt,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &u)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
 // GetUserById:
