@@ -40,20 +40,27 @@ func (h *userHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 // GetUserById:
 func (h *userHandlers) GetUserById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	// id, err := strconv.Atoi(c.Param("id"))
 
-	// if err != nil {
-	// 	return
-	// }
-
-	user, err := h.useCase.GetUserById(ctx, 2)
-	print(user)
-
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.ReadIDParam.user_handler")
 		return
 	}
 
-	w.Write([]byte("getuserbiyd"))
+	u, err := h.useCase.GetUserById(ctx, id)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: h.useCase.GetUserById.user_handler")
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, nil)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error: utils.WriteJSON.user_handler")
+		return
+	}
 }
 
 // CreateUser:

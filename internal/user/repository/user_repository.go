@@ -57,8 +57,23 @@ func (r *userRepository) GetUsers(ctx context.Context) ([]*entity.User, error) {
 }
 
 // GetUserById:
-func (r *userRepository) GetUserById(ctx context.Context, id int) (*entity.User, error) {
-	return nil, nil
+func (r *userRepository) GetUserById(ctx context.Context, id int64) (*entity.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var u entity.User
+	err := r.DB.QueryRowContext(ctx, getUserByIdQuery, id).Scan(
+		&u.ID,
+		&u.Name,
+		&u.Email,
+		&u.Password,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
 
 // GetUserByEmail:

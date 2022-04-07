@@ -28,7 +28,7 @@ func (uc *userUseCase) GetUsers(ctx context.Context) ([]*entity.User, error) {
 }
 
 // GetUserById:
-func (uc *userUseCase) GetUserById(ctx context.Context, id int) (*entity.User, error) {
+func (uc *userUseCase) GetUserById(ctx context.Context, id int64) (*entity.User, error) {
 	user, err := uc.userRepository.GetUserById(ctx, id)
 	if err != nil {
 		return nil, httpErrors.NewInternalServerError(err)
