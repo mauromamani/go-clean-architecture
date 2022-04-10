@@ -33,7 +33,7 @@ func main() {
 		appLogger.Info("connection pool establieshed")
 	}
 
-	app := application.New(cfg, db)
+	app := application.New(cfg, db, appLogger)
 
 	err = app.Run()
 	if err != nil {

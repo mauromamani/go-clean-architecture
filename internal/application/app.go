@@ -7,15 +7,17 @@ import (
 	"time"
 
 	"github.com/mauromamani/go-clean-architecture/config"
+	"github.com/mauromamani/go-clean-architecture/pkg/logger"
 )
 
 type application struct {
-	cfg *config.Config
-	srv *http.Server
-	db  *sql.DB
+	cfg    *config.Config
+	srv    *http.Server
+	db     *sql.DB
+	logger logger.Logger
 }
 
-func New(cfg *config.Config, db *sql.DB) *application {
+func New(cfg *config.Config, db *sql.DB, logger logger.Logger) *application {
 	return &application{
 		cfg: cfg,
 		db:  db,
@@ -26,6 +28,7 @@ func New(cfg *config.Config, db *sql.DB) *application {
 			ReadTimeout:  cfg.Server.ReadTimeout * time.Second,
 			WriteTimeout: cfg.Server.WriteTimeout * time.Second,
 		},
+		logger: logger,
 	}
 }
 
@@ -33,7 +36,7 @@ func New(cfg *config.Config, db *sql.DB) *application {
 func (app *application) Run() error {
 	app.srv.Handler = app.mapHandlers()
 
-	log.Println("starting server")
+	app.logger.Infof("starting server on port %s", app.cfg.Server.Port)
 	if err := app.srv.ListenAndServe(); err != nil {
 		return err
 	}
