@@ -15,9 +15,16 @@ type Config struct {
 
 type ServerConfig struct {
 	Port         string
+	Mode         string
 	IdleTimeout  time.Duration
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
+}
+
+type Logger struct {
+	Development bool
+	Encoding    string
+	Level       string
 }
 
 type PostgresConfig struct {

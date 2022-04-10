@@ -1,9 +1,14 @@
 server:
   Port: :5000
+  Mode: Development
   IdleTimeout: 1
   ReadTimeout: 10
   WriteTimeout: 30
 
+logger:
+  Development: true
+  Encoding: json
+  Level: info
 
 postgres:
   DSN: postgres://clean:1234@localhost/clean-architecture
