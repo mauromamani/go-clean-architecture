@@ -18,15 +18,13 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	appLogger, err := logger.New()
-	if err != nil {
-		log.Fatalf("failed to create logger: %v", err)
-	}
-
 	cfg, err := config.ParseConfig(configFile)
 	if err != nil {
-		appLogger.Fatal("failed to parse config", zap.String("error", err.Error()))
+		log.Fatal("failed to parse config")
 	}
+
+	appLogger := logger.New(cfg)
+	appLogger.InitLogger()
 
 	db, err := postgres.NewConnection(cfg)
 	if err != nil {
