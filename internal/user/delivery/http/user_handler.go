@@ -2,7 +2,6 @@ package http
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
@@ -96,8 +95,6 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		h.logger.Error(err.Error())
-		log.Println(err)
-		log.Println("Error: utils.ReadIDParam.user_handler")
 		return
 	}
 
