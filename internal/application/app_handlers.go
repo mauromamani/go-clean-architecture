@@ -11,17 +11,17 @@ import (
 )
 
 // mapHandlers: setup all entity handlers in the application
-func (s *application) mapHandlers() http.Handler {
+func (app *application) mapHandlers() http.Handler {
 	router := httprouter.New()
 
 	// init repositories
-	userRepository := userRepo.NewUserRepository(s.db)
+	userRepository := userRepo.NewUserRepository(app.db)
 
 	// init useCases
 	userUseCase := userUC.NewUserUseCase(userRepository)
 
 	// init http handlers
-	userHandler := userHttp.NewUserHandlers(userUseCase)
+	userHandler := userHttp.NewUserHandlers(userUseCase, app.logger)
 
 	// map Routes
 	userHttp.MapRoutes(router, userHandler)

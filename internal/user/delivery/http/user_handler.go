@@ -7,16 +7,19 @@ import (
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
+	"github.com/mauromamani/go-clean-architecture/pkg/logger"
 	"github.com/mauromamani/go-clean-architecture/pkg/utils"
 )
 
 type userHandlers struct {
 	useCase user.UseCase
+	logger  logger.Logger
 }
 
-func NewUserHandlers(useCase user.UseCase) user.Handlers {
+func NewUserHandlers(useCase user.UseCase, logger logger.Logger) user.Handlers {
 	return &userHandlers{
 		useCase: useCase,
+		logger:  logger,
 	}
 }
 
@@ -26,15 +29,13 @@ func (h *userHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	users, err := h.useCase.GetUsers(ctx)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: GetUsers.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"users": users}, nil)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: WriteJSON.user_handler")
+		h.logger.Error(err.Error())
 	}
 }
 
@@ -44,22 +45,19 @@ func (h *userHandlers) GetUserById(w http.ResponseWriter, r *http.Request) {
 
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.ReadIDParam.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	u, err := h.useCase.GetUserById(ctx, id)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: h.useCase.GetUserById.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, nil)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.WriteJSON.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 }
@@ -72,15 +70,13 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err := utils.ReadJSON(w, r, user)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.ReadJSON.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	u, err := h.useCase.CreateUser(ctx, user)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: h.useCase.CreateUser.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
@@ -89,8 +85,7 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, headers)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.WriteJSON.user_handler")
+		h.logger.Error(err.Error())
 	}
 }
 
@@ -100,6 +95,7 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
+		h.logger.Error(err.Error())
 		log.Println(err)
 		log.Println("Error: utils.ReadIDParam.user_handler")
 		return
@@ -109,24 +105,19 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = utils.ReadJSON(w, r, user)
 	if err != nil {
-		if err != nil {
-			log.Println(err)
-			log.Println("Error: utils.ReadJSON.user_handler")
-			return
-		}
+		h.logger.Error(err.Error())
+		return
 	}
 
 	updatedUser, err := h.useCase.UpdateUser(ctx, id, user)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: h.useCase.UpdateUser.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": updatedUser}, nil)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.WriteJSON.user_handler")
+		h.logger.Error(err.Error())
 	}
 }
 
@@ -136,21 +127,18 @@ func (h *userHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.ReadIDParam.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	err = h.useCase.DeleteUser(ctx, id)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: h.useCase.DeleteUser.user_handler")
+		h.logger.Error(err.Error())
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": "user deleted!"}, nil)
 	if err != nil {
-		log.Println(err)
-		log.Println("Error: utils.WriteJSON.user_handler")
+		h.logger.Error(err.Error())
 	}
 }
