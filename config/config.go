@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	Server   ServerConfig
+	Logger   Logger
 	Postgres PostgresConfig
 }
 
