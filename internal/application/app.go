@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/mauromamani/go-clean-architecture/config"
 	"github.com/mauromamani/go-clean-architecture/pkg/logger"
 )
@@ -17,11 +18,12 @@ type application struct {
 	logger logger.Logger
 }
 
-func New(cfg *config.Config, db *sql.DB, logger logger.Logger) *application {
+func New(cfg *config.Config, db *sql.DB, handler *httprouter.Router, logger logger.Logger) *application {
 	return &application{
 		cfg: cfg,
 		db:  db,
 		srv: &http.Server{
+			Handler:      handler,
 			Addr:         cfg.Server.Port,
 			ErrorLog:     log.Default(),
 			IdleTimeout:  cfg.Server.IdleTimeout * time.Minute,
@@ -34,7 +36,7 @@ func New(cfg *config.Config, db *sql.DB, logger logger.Logger) *application {
 
 // Run: run server on port 3000
 func (app *application) Run() error {
-	app.srv.Handler = app.mapHandlers()
+	app.mapHandlers()
 
 	app.logger.Infof("starting server on port %s", app.cfg.Server.Port)
 	if err := app.srv.ListenAndServe(); err != nil {

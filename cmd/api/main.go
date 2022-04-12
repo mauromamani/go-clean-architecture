@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/mauromamani/go-clean-architecture/config"
 	"github.com/mauromamani/go-clean-architecture/internal/application"
 	"github.com/mauromamani/go-clean-architecture/pkg/database/postgres"
@@ -33,7 +34,9 @@ func main() {
 		appLogger.Info("connection pool establieshed")
 	}
 
-	app := application.New(cfg, db, appLogger)
+	router := httprouter.New()
+
+	app := application.New(cfg, db, router, appLogger)
 
 	err = app.Run()
 	if err != nil {
