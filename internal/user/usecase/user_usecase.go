@@ -6,7 +6,6 @@ import (
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
 	"github.com/mauromamani/go-clean-architecture/internal/user/entity"
-	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 )
 
 type userUseCase struct {
@@ -21,7 +20,7 @@ func NewUserUseCase(userRepo user.Repository) user.UseCase {
 func (uc *userUseCase) GetUsers(ctx context.Context) ([]*entity.User, error) {
 	users, err := uc.userRepository.GetUsers(ctx)
 	if err != nil {
-		return nil, httpErrors.NewInternalServerError(err)
+		return nil, err
 	}
 
 	return users, nil
@@ -31,7 +30,7 @@ func (uc *userUseCase) GetUsers(ctx context.Context) ([]*entity.User, error) {
 func (uc *userUseCase) GetUserById(ctx context.Context, id int64) (*entity.User, error) {
 	user, err := uc.userRepository.GetUserById(ctx, id)
 	if err != nil {
-		return nil, httpErrors.NewInternalServerError(err)
+		return nil, err
 	}
 
 	return user, nil
@@ -41,7 +40,7 @@ func (uc *userUseCase) GetUserById(ctx context.Context, id int64) (*entity.User,
 func (uc *userUseCase) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
 	user, err := uc.userRepository.GetUserByEmail(ctx, email)
 	if err != nil {
-		return nil, httpErrors.NewInternalServerError(err)
+		return nil, err
 	}
 
 	return user, nil
@@ -52,7 +51,7 @@ func (uc *userUseCase) CreateUser(ctx context.Context, user *dtos.CreateUserDto)
 	u, err := uc.userRepository.CreateUser(ctx, user)
 	// TODO: Mejor manajo de errorres
 	if err != nil {
-		return nil, httpErrors.NewInternalServerError(err)
+		return nil, err
 	}
 
 	return u, nil
@@ -62,7 +61,7 @@ func (uc *userUseCase) CreateUser(ctx context.Context, user *dtos.CreateUserDto)
 func (uc *userUseCase) UpdateUser(ctx context.Context, id int64, user *dtos.UpdateUserDto) (*entity.User, error) {
 	updatedUser, err := uc.userRepository.UpdateUser(ctx, id, user)
 	if err != nil {
-		return nil, httpErrors.NewInternalServerError(err)
+		return nil, err
 	}
 
 	return updatedUser, nil
@@ -72,7 +71,7 @@ func (uc *userUseCase) UpdateUser(ctx context.Context, id int64, user *dtos.Upda
 func (uc *userUseCase) DeleteUser(ctx context.Context, id int64) error {
 	err := uc.userRepository.DeleteUser(ctx, id)
 	if err != nil {
-		return httpErrors.NewInternalServerError(err)
+		return err
 	}
 
 	return nil
