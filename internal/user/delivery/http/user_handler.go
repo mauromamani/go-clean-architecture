@@ -6,6 +6,7 @@ import (
 
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 	"github.com/mauromamani/go-clean-architecture/internal/user/dtos"
+	httpErrors "github.com/mauromamani/go-clean-architecture/pkg/errors"
 	"github.com/mauromamani/go-clean-architecture/pkg/logger"
 	"github.com/mauromamani/go-clean-architecture/pkg/utils"
 )
@@ -29,12 +30,16 @@ func (h *userHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := h.useCase.GetUsers(ctx)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"users": users}, nil)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 	}
 }
 
@@ -45,19 +50,24 @@ func (h *userHandlers) GetUserById(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	u, err := h.useCase.GetUserById(ctx, id)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, nil)
 	if err != nil {
 		h.logger.Error(err.Error())
-		return
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 	}
 }
 
@@ -70,12 +80,16 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err := utils.ReadJSON(w, r, user)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	u, err := h.useCase.CreateUser(ctx, user)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
@@ -85,6 +99,8 @@ func (h *userHandlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": u}, headers)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 	}
 }
 
@@ -95,6 +111,8 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
@@ -103,18 +121,24 @@ func (h *userHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	err = utils.ReadJSON(w, r, user)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	updatedUser, err := h.useCase.UpdateUser(ctx, id, user)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": updatedUser}, nil)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 	}
 }
 
@@ -125,17 +149,23 @@ func (h *userHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	err = h.useCase.DeleteUser(ctx, id)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"user": "user deleted!"}, nil)
 	if err != nil {
 		h.logger.Error(err.Error())
+		status, restErr := httpErrors.ErrorResponse(err)
+		utils.WriteJSON(w, status, map[string]interface{}{"error": restErr}, nil)
 	}
 }
