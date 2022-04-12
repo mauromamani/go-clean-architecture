@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -9,12 +10,10 @@ import (
 	"github.com/mauromamani/go-clean-architecture/pkg/validator"
 )
 
-const (
-	ErrEmailAlreadyExists = "User with given email already exists"
-)
-
 var (
 	errInternalServer = errors.New("internal server error")
+	errRecordNotFound = errors.New("record not found")
+	errBadRequest     = errors.New("bad request")
 )
 
 // Rest error interface
@@ -64,20 +63,20 @@ func NewInternalServerError(causes interface{}) IRestError {
 	}
 }
 
+// NewBadRequestError:
+func NewBadRequestError(causes interface{}) IRestError {
+	return RestError{
+		ErrStatus: http.StatusBadRequest,
+		ErrError:  errBadRequest.Error(),
+		ErrCauses: causes,
+	}
+}
+
 // ParseErrors
 func ParseErrors(err error) IRestError {
 	switch {
-	case strings.Contains(strings.ToLower(err.Error()), "failed creating"):
-		return NewRestError(http.StatusBadRequest, "Failed creating entity record", err)
-
-	case strings.Contains(strings.ToLower(err.Error()), "failed updating"):
-		return NewRestError(http.StatusBadRequest, "Failed updating entity record", err)
-
-	case strings.Contains(strings.ToLower(err.Error()), "failed deleting"):
-		return NewRestError(http.StatusBadRequest, "Failed deleting entity record", err)
-
-	case strings.Contains(strings.ToLower(err.Error()), "failed querying"):
-		return NewRestError(http.StatusBadRequest, "Failed querying entity record", err)
+	case errors.Is(err, sql.ErrNoRows):
+		return NewRestError(http.StatusNotExtended, errRecordNotFound.Error(), err)
 
 	case strings.Contains(strings.ToLower(err.Error()), "field validation"):
 		return parseValidatorError(err)
