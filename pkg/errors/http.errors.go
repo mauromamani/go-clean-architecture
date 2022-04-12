@@ -14,6 +14,7 @@ var (
 	errInternalServer = errors.New("internal server error")
 	errRecordNotFound = errors.New("record not found")
 	errBadRequest     = errors.New("bad request")
+	errDuplicateEmail = errors.New("duplicate email")
 )
 
 // Rest error interface
@@ -76,7 +77,13 @@ func NewBadRequestError(causes interface{}) IRestError {
 func ParseErrors(err error) IRestError {
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
-		return NewRestError(http.StatusNotExtended, errRecordNotFound.Error(), err)
+		return NewRestError(http.StatusNotFound, errRecordNotFound.Error(), err)
+
+	case strings.Contains(strings.ToLower(err.Error()), "invalid id parameter"):
+		return NewRestError(http.StatusBadRequest, "invalid id parameter", err)
+
+	case strings.Contains(strings.ToLower(err.Error()), "duplicate key value violates unique constraint \"users_email_key\""):
+		return NewRestError(http.StatusUnprocessableEntity, errDuplicateEmail.Error(), err)
 
 	case strings.Contains(strings.ToLower(err.Error()), "field validation"):
 		return parseValidatorError(err)
@@ -92,7 +99,7 @@ func ParseErrors(err error) IRestError {
 
 func parseValidatorError(err error) IRestError {
 	errors := validator.MapTranslatedErrors(err)
-	return NewRestError(http.StatusBadRequest, errors, err)
+	return NewRestError(http.StatusUnprocessableEntity, errors, err)
 }
 
 // ErrorResponse:
