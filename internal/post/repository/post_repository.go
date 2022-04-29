@@ -39,6 +39,7 @@ func (r *postRepository) GetPosts(ctx context.Context) ([]*entity.Post, error) {
 			&p.Title,
 			&p.Body,
 			&p.CreatedAt,
+			&p.UserID,
 		)
 
 		if err != nil {
@@ -66,6 +67,7 @@ func (r *postRepository) GetPostById(ctx context.Context, id int64) (*entity.Pos
 		&p.Title,
 		&p.Body,
 		&p.CreatedAt,
+		&p.UserID,
 	)
 
 	if err != nil {
@@ -86,11 +88,13 @@ func (r *postRepository) CreatePost(ctx context.Context, post *dtos.CreatePostDt
 
 	err := r.DB.QueryRowContext(ctx, createPostQuery, args...).Scan(
 		&p.ID,
+		&p.CreatedAt,
 		&p.Title,
 		&p.Body,
-		&p.CreatedAt,
+		&p.UserID,
 	)
 
+	// TODO: Error cuando se usa un user_id que  no existe
 	if err != nil {
 		return nil, err
 	}
@@ -109,9 +113,10 @@ func (r *postRepository) UpdatePost(ctx context.Context, id int64, post *dtos.Up
 
 	err := r.DB.QueryRowContext(ctx, updatePostQuery, args...).Scan(
 		&p.ID,
+		&p.CreatedAt,
 		&p.Title,
 		&p.Body,
-		&p.CreatedAt,
+		&p.UserID,
 	)
 
 	if err != nil {

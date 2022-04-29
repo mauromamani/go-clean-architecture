@@ -7,7 +7,7 @@ import (
 	"github.com/mauromamani/go-clean-architecture/internal/user"
 )
 
-// MapRoutes: init each route with its http method
+// MapRoutes:
 func MapRoutes(route *httprouter.Router, h user.Handlers) {
 	route.HandlerFunc(http.MethodGet, "/api/v1/users", h.GetUsers)
 	route.HandlerFunc(http.MethodPost, "/api/v1/users", h.CreateUser)

@@ -24,7 +24,7 @@ func (app *application) mapHandlers() {
 	userHandler := userHttp.NewUserHandlers(userUseCase, app.logger)
 	postHandler := postHttp.NewPostHandlers(postUseCase, app.logger)
 
-	// map Routes
+	// map routes
 	userHttp.MapRoutes(app.srv.Handler.(*httprouter.Router), userHandler)
 	postHttp.MapRoutes(app.srv.Handler.(*httprouter.Router), postHandler)
 }
