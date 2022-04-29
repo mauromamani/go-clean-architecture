@@ -11,6 +11,7 @@ const (
 		FROM users
 		WHERE id = $1
 	`
+
 	createUserQuery = `
 		INSERT INTO users (name, email, password)
 		VALUES ($1, $2, $3)

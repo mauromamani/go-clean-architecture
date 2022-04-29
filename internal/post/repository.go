@@ -9,7 +9,7 @@ import (
 type Repository interface {
 	GetPosts(ctx context.Context) ([]*entity.Post, error)
 	GetPostById(ctx context.Context, id int64) (*entity.Post, error)
-	CreatePost(ctx context.Context, user *entity.Post) (*entity.Post, error)
-	UpdatePost(ctx context.Context, id int64, user *entity.Post) (*entity.Post, error)
+	CreatePost(ctx context.Context, post *entity.Post, userID int64) (*entity.Post, error)
+	UpdatePost(ctx context.Context, id int64, post *entity.Post) (*entity.Post, error)
 	DeletePost(ctx context.Context, id int64) error
 }

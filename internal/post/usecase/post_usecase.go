@@ -28,12 +28,12 @@ func (uc *postUseCase) GetPostById(ctx context.Context, id int64) (*entity.Post,
 }
 
 // CreatePost:
-func (uc *postUseCase) CreatePost(ctx context.Context, user *entity.Post) (*entity.Post, error) {
+func (uc *postUseCase) CreatePost(ctx context.Context, post *entity.Post) (*entity.Post, error) {
 	return nil, nil
 }
 
 // UpdatePost:
-func (uc *postUseCase) UpdatePost(ctx context.Context, id int64, user *entity.Post) (*entity.Post, error) {
+func (uc *postUseCase) UpdatePost(ctx context.Context, id int64, post *entity.Post) (*entity.Post, error) {
 	return nil, nil
 }
 

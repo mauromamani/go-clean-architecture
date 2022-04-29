@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/mauromamani/go-clean-architecture/internal/post"
@@ -74,19 +75,70 @@ func (r *postRepository) GetPostById(ctx context.Context, id int64) (*entity.Pos
 }
 
 // CreatePost:
-func (r *postRepository) CreatePost(ctx context.Context, user *entity.Post) (*entity.Post, error) {
+func (r *postRepository) CreatePost(ctx context.Context, post *entity.Post, userID int64) (*entity.Post, error) {
+	args := []interface{}{post.Title, post.Body, userID}
+
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	return nil, nil
+	var p entity.Post
+
+	err := r.DB.QueryRowContext(ctx, createPostQuery, args...).Scan(
+		&p.ID,
+		&p.Title,
+		&p.Body,
+		&p.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &p, nil
 }
 
 // UpdatePost:
-func (r *postRepository) UpdatePost(ctx context.Context, id int64, user *entity.Post) (*entity.Post, error) {
-	return nil, nil
+func (r *postRepository) UpdatePost(ctx context.Context, id int64, post *entity.Post) (*entity.Post, error) {
+	args := []interface{}{post.Title, post.Title, id}
+
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	var p entity.Post
+
+	err := r.DB.QueryRowContext(ctx, updatePostQuery, args...).Scan(
+		&p.ID,
+		&p.Title,
+		&p.Body,
+		&p.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &p, nil
 }
 
 // DeletePost:
 func (r *postRepository) DeletePost(ctx context.Context, id int64) error {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	result, err := r.DB.ExecContext(ctx, deletePostQuery, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// TODO: Agregar el error ErrRecordNotFound
+	if rowsAffected == 0 {
+		return errors.New("record not found")
+	}
+
 	return nil
 }
