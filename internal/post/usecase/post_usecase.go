@@ -19,25 +19,50 @@ func NewPostUseCase(postRepo post.Repository) post.UseCase {
 
 // GetPosts:
 func (uc *postUseCase) GetPosts(ctx context.Context) ([]*entity.Post, error) {
-	return nil, nil
+	posts, err := uc.postRepository.GetPosts(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
 }
 
 // GetPostById:
 func (uc *postUseCase) GetPostById(ctx context.Context, id int64) (*entity.Post, error) {
-	return nil, nil
+	post, err := uc.postRepository.GetPostById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return post, nil
 }
 
 // CreatePost:
-func (uc *postUseCase) CreatePost(ctx context.Context, post *entity.Post) (*entity.Post, error) {
-	return nil, nil
+func (uc *postUseCase) CreatePost(ctx context.Context, post *entity.Post, userID int64) (*entity.Post, error) {
+	post, err := uc.postRepository.CreatePost(ctx, post, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return post, nil
 }
 
 // UpdatePost:
 func (uc *postUseCase) UpdatePost(ctx context.Context, id int64, post *entity.Post) (*entity.Post, error) {
-	return nil, nil
+	post, err := uc.postRepository.UpdatePost(ctx, id, post)
+	if err != nil {
+		return nil, err
+	}
+
+	return post, nil
 }
 
 // DeletePost:
 func (uc *postUseCase) DeletePost(ctx context.Context, id int64) error {
+	err := uc.postRepository.DeletePost(ctx, id)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
