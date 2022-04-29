@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/mauromamani/go-clean-architecture/internal/post"
+	"github.com/mauromamani/go-clean-architecture/internal/post/dtos"
 	"github.com/mauromamani/go-clean-architecture/internal/post/entity"
 )
 
@@ -75,8 +76,8 @@ func (r *postRepository) GetPostById(ctx context.Context, id int64) (*entity.Pos
 }
 
 // CreatePost:
-func (r *postRepository) CreatePost(ctx context.Context, post *entity.Post, userID int64) (*entity.Post, error) {
-	args := []interface{}{post.Title, post.Body, userID}
+func (r *postRepository) CreatePost(ctx context.Context, post *dtos.CreatePostDto) (*entity.Post, error) {
+	args := []interface{}{post.Title, post.Body, post.UserID}
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -98,7 +99,7 @@ func (r *postRepository) CreatePost(ctx context.Context, post *entity.Post, user
 }
 
 // UpdatePost:
-func (r *postRepository) UpdatePost(ctx context.Context, id int64, post *entity.Post) (*entity.Post, error) {
+func (r *postRepository) UpdatePost(ctx context.Context, id int64, post *dtos.UpdatePostDto) (*entity.Post, error) {
 	args := []interface{}{post.Title, post.Title, id}
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)

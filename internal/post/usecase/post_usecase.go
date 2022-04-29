@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/mauromamani/go-clean-architecture/internal/post"
+	"github.com/mauromamani/go-clean-architecture/internal/post/dtos"
 	"github.com/mauromamani/go-clean-architecture/internal/post/entity"
 )
 
@@ -38,23 +39,23 @@ func (uc *postUseCase) GetPostById(ctx context.Context, id int64) (*entity.Post,
 }
 
 // CreatePost:
-func (uc *postUseCase) CreatePost(ctx context.Context, post *entity.Post, userID int64) (*entity.Post, error) {
-	post, err := uc.postRepository.CreatePost(ctx, post, userID)
+func (uc *postUseCase) CreatePost(ctx context.Context, post *dtos.CreatePostDto) (*entity.Post, error) {
+	p, err := uc.postRepository.CreatePost(ctx, post)
 	if err != nil {
 		return nil, err
 	}
 
-	return post, nil
+	return p, nil
 }
 
 // UpdatePost:
-func (uc *postUseCase) UpdatePost(ctx context.Context, id int64, post *entity.Post) (*entity.Post, error) {
-	post, err := uc.postRepository.UpdatePost(ctx, id, post)
+func (uc *postUseCase) UpdatePost(ctx context.Context, id int64, post *dtos.UpdatePostDto) (*entity.Post, error) {
+	p, err := uc.postRepository.UpdatePost(ctx, id, post)
 	if err != nil {
 		return nil, err
 	}
 
-	return post, nil
+	return p, nil
 }
 
 // DeletePost:
