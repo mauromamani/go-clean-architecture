@@ -7,6 +7,6 @@ type CreatePostDto struct {
 }
 
 type UpdatePostDto struct {
-	Title *string `json:"title" validate:"omitempty,alphanum"`
-	Body  *string `json:"body" validate:"omitempty,alphanum"`
+	Title *string `json:"title" validate:"omitempty"`
+	Body  *string `json:"body" validate:"omitempty"`
 }

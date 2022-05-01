@@ -94,7 +94,6 @@ func (r *postRepository) CreatePost(ctx context.Context, post *dtos.CreatePostDt
 		&p.UserID,
 	)
 
-	// TODO: Error cuando se usa un user_id que  no existe
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +140,6 @@ func (r *postRepository) DeletePost(ctx context.Context, id int64) error {
 		return err
 	}
 
-	// TODO: Agregar el error ErrRecordNotFound
 	if rowsAffected == 0 {
 		return errors.New("record not found")
 	}

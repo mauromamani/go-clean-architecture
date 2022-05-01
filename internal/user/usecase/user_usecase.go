@@ -49,7 +49,6 @@ func (uc *userUseCase) GetUserByEmail(ctx context.Context, email string) (*entit
 // CreateUser:
 func (uc *userUseCase) CreateUser(ctx context.Context, user *dtos.CreateUserDto) (*entity.User, error) {
 	u, err := uc.userRepository.CreateUser(ctx, user)
-	// TODO: Mejor manajo de errorres
 	if err != nil {
 		return nil, err
 	}

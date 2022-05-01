@@ -11,10 +11,12 @@ import (
 )
 
 var (
-	errInternalServer = errors.New("internal server error")
-	errRecordNotFound = errors.New("record not found")
-	errBadRequest     = errors.New("bad request")
-	errDuplicateEmail = errors.New("duplicate email")
+	errInternalServer     = errors.New("internal server error")
+	errRecordNotFound     = errors.New("record not found")
+	errBadRequest         = errors.New("bad request")
+	errDuplicateEmail     = errors.New("duplicate email")
+	errInvalidIDParameter = errors.New("invalid ID parameter")
+	errInvalidForeignKey  = errors.New("invalid foreign key")
 )
 
 // Rest error interface
@@ -80,10 +82,13 @@ func ParseErrors(err error) IRestError {
 		return NewRestError(http.StatusNotFound, errRecordNotFound.Error(), err)
 
 	case strings.Contains(strings.ToLower(err.Error()), "invalid id parameter"):
-		return NewRestError(http.StatusBadRequest, "invalid id parameter", err)
+		return NewRestError(http.StatusBadRequest, errInvalidIDParameter.Error(), err)
 
 	case strings.Contains(strings.ToLower(err.Error()), "duplicate key value violates unique constraint \"users_email_key\""):
 		return NewRestError(http.StatusUnprocessableEntity, errDuplicateEmail.Error(), err)
+
+	case strings.Contains(strings.ToLower(err.Error()), "insert or update on table \"posts\" violates foreign key constraint \"posts_user_id_fkey\""):
+		return NewRestError(http.StatusUnprocessableEntity, errInvalidForeignKey.Error(), err)
 
 	case strings.Contains(strings.ToLower(err.Error()), "field validation"):
 		return parseValidatorError(err)

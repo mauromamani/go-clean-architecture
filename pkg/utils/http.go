@@ -46,7 +46,6 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 
 	err := dec.Decode(&dst)
 
-	// TODO: Manejo de errores en el archivo de errores
 	if err != nil {
 		var syntaxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError

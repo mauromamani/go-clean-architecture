@@ -98,7 +98,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user *dtos.CreateUserDt
 		&u.Email,
 		&u.Password,
 	)
-	// TODO: Manejo del error: unique key constraint
+
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +144,6 @@ func (r *userRepository) DeleteUser(ctx context.Context, id int64) error {
 		return err
 	}
 
-	// TODO: Agregar el error ErrRecordNotFound
 	if rowsAffected == 0 {
 		return errors.New("record not found")
 	}
