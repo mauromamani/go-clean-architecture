@@ -31,9 +31,20 @@ func loadTranslations() {
 		return t
 	})
 
+	_ = validate.RegisterTranslation("trim", trans, func(ut ut.Translator) error {
+		return ut.Add("trim", "{0} must not be empty", true) // see universal-translator for details
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("trim", fe.Field())
+		return t
+	})
+
 	// Register custom validations
 	_ = validate.RegisterValidation("passwd", func(fl validator.FieldLevel) bool {
 		return len(fl.Field().String()) > 6
+	})
+
+	_ = validate.RegisterValidation("trim", func(fl validator.FieldLevel) bool {
+		return strings.Trim(fl.Field().String(), " ") != ""
 	})
 
 	// Transform fields to lower-case
