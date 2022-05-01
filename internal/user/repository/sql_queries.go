@@ -14,14 +14,14 @@ const (
 
 	createUserQuery = `
 		INSERT INTO users (name, email, password)
-		VALUES ($1, $2, $3)
+		VALUES (TRIM($1), $2, $3)
 		RETURNING *
 	`
 
 	updateUserQuery = `
 		UPDATE users
 		SET 
-			name = COALESCE(NULLIF($1, ''), name),
+			name = TRIM(COALESCE(NULLIF($1, ''), name)),
 			email = COALESCE(NULLIF($2, ''), email),
 			password = COALESCE(NULLIF($3, ''), password)
 		WHERE id = $4

@@ -14,15 +14,15 @@ const (
 
 	createPostQuery = `
 		INSERT INTO posts (title, body, user_id)
-		VALUES ($1, $2, $3)
+		VALUES (TRIM($1), TRIM($2), $3)
 		RETURNING *
 	`
 
 	updatePostQuery = `
 		UPDATE posts
 		SET
-			title = COALESCE(NULLIF($1, ''), title),
-			body = COALESCE(NULLIF($2, ''), body)
+			title = TRIM(COALESCE(NULLIF($1, ''), title)),
+			body = TRIM(COALESCE(NULLIF($2, ''), body))
 		WHERE id = $3
 		RETURNING *
 			
