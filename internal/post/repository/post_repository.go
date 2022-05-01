@@ -103,7 +103,7 @@ func (r *postRepository) CreatePost(ctx context.Context, post *dtos.CreatePostDt
 
 // UpdatePost:
 func (r *postRepository) UpdatePost(ctx context.Context, id int64, post *dtos.UpdatePostDto) (*entity.Post, error) {
-	args := []interface{}{post.Title, post.Title, id}
+	args := []interface{}{post.Title, post.Body, id}
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
